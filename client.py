@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 
 BROKER = "home.memorymee.org"  # адрес вашего MQTT-брокера
 PORT = 1883
-TOPIC = "farmbot/cmd"        # топик для подписки
+TOPIC = "farmbot/ack"        # топик для подписки
 
 USERNAME = "admin"
 PASSWORD = "pass12345"

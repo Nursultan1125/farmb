@@ -16,14 +16,14 @@ PASSWORD = "pass12345"
 
 # === Начальное состояние ===
 position = {"X": 0.0, "Y": 0.0, "Z": 0.0}
-step = 1.0     # шаг движения в мм
+step = 0.2     # шаг движения в мм
 feedrate = 1000 # скорость подачи
-ready = False   # блокируем до получения OK после G28
+ready = True   # блокируем до получения OK после G28
 
 # === Границы ===
 limits = {
-    "X": (0.0, 200.0),  # min, max
-    "Y": (0.0, 150.0),
+    "X": (0.0, 120.0),  # min, max
+    "Y": (0.0, 70.0),
     "Z": (0.0, 50.0)
 }
 
@@ -36,15 +36,14 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe(TOPIC_ACK)
         print(f"📡 Подписка на {TOPIC_ACK}")
         # Отправляем домой при подключении
-        send_home()
     else:
         print(f"❌ Ошибка подключения: {rc}")
 
 def on_message(client, userdata, msg):
     global ready
-    payload = msg.payload.decode().strip()
+    payload = json.loads(msg.payload.decode())
     print("📥 Получено:", payload)
-    if payload.upper() == "OK":
+    if payload["ack"] == "OK":
         ready = True
         lbl_status.config(text="✅ Готов к следующей команде", foreground="green")
     else:
@@ -58,11 +57,6 @@ client.loop_start()
 
 # === Отправка G-кода ===
 def send_gcode():
-    global ready
-    if not ready:
-        lbl_status.config(text="⏳ Ожидание OK...", foreground="orange")
-        print("⚠️ Ожидание OK от контроллера")
-        return
 
     cmd = f"G0 X{position['X']:.2f} Y{position['Y']:.2f} Z{position['Z']:.2f} F{feedrate}"
     message = json.dumps({"cmd": cmd})
@@ -80,10 +74,18 @@ def send_home():
     cmd = "G28"
     message = json.dumps({"cmd": cmd})
     client.publish(TOPIC_CMD, message)
+    position['X'] = 0
+    position['Y'] = 0
+    position['Z'] = 0
     print("📤", message)
 
 # === Движение с проверкой границ ===
 def move(axis, delta):
+    global ready
+    if not ready:
+        lbl_status.config(text="⏳ Ожидание OK...", foreground="orange")
+        print("⚠️ Ожидание OK от контроллера")
+        return
     min_val, max_val = limits[axis]
     new_val = position[axis] + delta
     if new_val < min_val:
@@ -93,6 +95,7 @@ def move(axis, delta):
         new_val = max_val
         lbl_status.config(text=f"⚠️ {axis} достиг максимума {max_val}", foreground="red")
     position[axis] = new_val
+    print("+++++++++++")
     send_gcode()
     update_labels()
 

@@ -58,7 +58,8 @@ def main():
     client.connect(BROKER, PORT)
 
 
-    client.publish(TOPIC_PUB, payload=json.dumps({"cmd": "G0 X0 Y1 Z1"}), qos=0, retain=False)
+    # client.publish(TOPIC_PUB, payload=json.dumps({"cmd": "G0 X100 Y30 Z40 F3000"}), qos=0, retain=False)
+    client.publish(TOPIC_PUB, payload=json.dumps({"cmd": "G28"}), qos=0, retain=False)
     print(json.dumps({"cmd": "G0 X1 Y1 Z1"}))
     print("OK")
 
