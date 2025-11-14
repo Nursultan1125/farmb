@@ -4,8 +4,18 @@ import serial
 import time
 from serial.tools import list_ports
 
+def find_arduino_port():
+    """Ищем первый доступный порт, который выглядит как Arduino"""
+    ports = list_ports.comports()
+    for port in ports:
+        # port.device — путь, port.description — описание устройства
+        if "USB" in port.device or "ACM" in port.device or "Arduino" in port.description:
+            print(f"✅ Found serial port: {port.device} ({port.description})")
+            return port.device
+    raise RuntimeError("❌ Arduino not found! Подключите устройство и попробуйте снова.")
+
 # === SERIAL PORT ===
-ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
+ser = serial.Serial(find_arduino_port(), 115200, timeout=1)
 time.sleep(2)  # ждём подключения
 
 # === RTSP ПОТОК ===
@@ -29,15 +39,7 @@ def send_gcode(x, y):
     ser.write(cmd.encode())
     print("SEND:", cmd.strip())
 
-def find_arduino_port():
-    """Ищем первый доступный порт, который выглядит как Arduino"""
-    ports = list_ports.comports()
-    for port in ports:
-        # port.device — путь, port.description — описание устройства
-        if "USB" in port.device or "ACM" in port.device or "Arduino" in port.description:
-            print(f"✅ Found serial port: {port.device} ({port.description})")
-            return port.device
-    raise RuntimeError("❌ Arduino not found! Подключите устройство и попробуйте снова.")
+
 
 while True:
     ret, frame = cap.read()
