@@ -1,6 +1,6 @@
 import cv2
 
-rtsp_url = "rtsp://admin:password@192.168.1.64:554/Streaming/Channels/101"
+rtsp_url = "rtsp://admin:nurs1905@192.168.1.64:554/Streaming/Channels/101"
 
 # Отключаем буфер (важно!)
 gst = (
