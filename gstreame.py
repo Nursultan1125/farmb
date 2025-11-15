@@ -1,6 +1,6 @@
 import cv2
 
-rtsp_url = "rtsp://admin:nurs1905@192.168.1.64:554/Streaming/Channels/102"
+rtsp_url = "rtsp://admin:nurs1905@192.168.1.64:554/Streaming/Channels/101"
 
 gst = (
     f"rtspsrc location={rtsp_url} latency=0 ! "
