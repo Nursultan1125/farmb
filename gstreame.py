@@ -2,10 +2,11 @@ import cv2
 
 rtsp_url = "rtsp://admin:nurs1905@192.168.1.64:554/Streaming/Channels/101"
 
-# Отключаем буфер (важно!)
+# GStreamer pipeline для H.265 / HEVC
 gst = (
     f"rtspsrc location={rtsp_url} latency=0 ! "
-    "rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! appsink"
+    "rtph265depay ! h265parse ! avdec_h265 ! "
+    "videoconvert ! appsink"
 )
 
 cap = cv2.VideoCapture(gst, cv2.CAP_GSTREAMER)
@@ -14,7 +15,7 @@ if not cap.isOpened():
     print("❌ Не могу открыть RTSP поток")
     exit()
 
-print("✅ RTSP открыт! Начинаю чтение кадров...")
+print("✅ RTSP поток открыт (H.265)!")
 
 while True:
     ret, frame = cap.read()
@@ -23,7 +24,7 @@ while True:
         print("no frame")
         continue
 
-    cv2.imshow("IP Camera", frame)
+    cv2.imshow("IP Camera (H265)", frame)
 
     if cv2.waitKey(1) == 27:
         break
