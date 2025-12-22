@@ -47,7 +47,7 @@ def read_until_ok(ser: serial.Serial, timeout_s: float = 10.0) -> str:
             return line
     raise TimeoutError(f"Timeout waiting for 'ok'. Last line: {last_line!r}")
 
-def send_gcode_and_wait_ok(ser: serial.Serial, cmd: str, timeout_s: float = 10.0) -> None:
+def send_gcode_and_wait_ok(ser: serial.Serial, cmd: str, timeout_s: float = 50.0) -> None:
     """
     RU: Отправляем G-code строку и ждём 'ok'.
     EN: Send one G-code line and wait for 'ok'.
