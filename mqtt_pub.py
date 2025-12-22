@@ -60,7 +60,7 @@ def main():
 
     # client.publish(TOPIC_PUB, payload=json.dumps({"cmd": "G0 X100 Y30 Z40 F3000"}), qos=0, retain=False)
     client.publish(TOPIC_PUB, payload=json.dumps({"cmd": "G28"}), qos=0, retain=False)
-    print(json.dumps({"cmd": "G0 X1 Y1 Z1"}))
+    print(json.dumps({"cmd": "G0 X70 Y30 Z30"}))
     print("OK")
 
 
