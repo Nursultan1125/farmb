@@ -87,7 +87,7 @@ def main():
                 f"Z{30:.2f} "
                 f"F{int(3000)}"
             )
-            send_gcode_and_wait_ok(ser, cmd, timeout_s=10.0)
+            send_gcode_and_wait_ok(ser, cmd, timeout_s=50.0)
             # Если нужно строго каждые 2 секунды (дополнительно к ожиданию 'ok'):
             # time.sleep(2)
 
