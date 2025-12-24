@@ -76,18 +76,23 @@ def main():
     except Exception:
         pass
 
-    send_gcode_and_wait_ok(ser, "G28")
-    for j in range(7):
-        x = j * 20
-        for i in range(8):
-            y = i * 10
-            cmd = (
-                f"G0 X{x:.2f} "
-                f"Y{y:.2f} "
-                f"Z{30:.2f} "
-                f"F{int(3000)}"
-            )
-            send_gcode_and_wait_ok(ser, cmd, timeout_s=50.0)
+    try:
+        send_gcode_and_wait_ok(ser, "G28")
+    except Exception:
+        send_gcode_and_wait_ok(ser, "G28")
+
+    for i in range(1, 50):
+        for j in range(7):
+            x = j * 20
+            for i in range(8):
+                y = i * 10
+                cmd = (
+                    f"G0 X{x:.2f} "
+                    f"Y{y:.2f} "
+                    f"Z{30:.2f} "
+                    f"F{int(3000)}"
+                )
+                send_gcode_and_wait_ok(ser, cmd, timeout_s=50.0)
             # Если нужно строго каждые 2 секунды (дополнительно к ожиданию 'ok'):
             # time.sleep(2)
 
