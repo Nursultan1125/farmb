@@ -81,7 +81,7 @@ def main():
     except Exception:
         send_gcode_and_wait_ok(ser, "G28")
 
-    for i in range(1, 50):
+    for _ in range(1, 50):
         for j in range(7):
             x = j * 20
             for i in range(8):
